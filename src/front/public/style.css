@@ -1,0 +1,11 @@
+header{
+    margin-bottom: 5%;
+}
+
+#content{
+    margin-top:5%;
+}
+
+.list-group-item:hover{
+    background-color: rgb(233, 233, 233);
+}
