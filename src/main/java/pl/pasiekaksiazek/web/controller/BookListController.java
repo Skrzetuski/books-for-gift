@@ -10,6 +10,7 @@ import pl.pasiekaksiazek.web.service.CacheService;
 
 import java.net.URISyntaxException;
 
+
 @Controller
 @RequestMapping(value = "/api/books")
 public class BookListController {
@@ -23,9 +24,10 @@ public class BookListController {
     @CrossOrigin(value = "*", methods = RequestMethod.GET)
     @ResponseBody
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getAllBooks() throws URISyntaxException, JsonProcessingException {
+    public String getAllBooks() throws URISyntaxException, JsonProcessingException{
         if (cacheService.getJson() == null){
             cacheService.setJson(booksService.prepareJsonAndListCache());
+            cacheService.updateCache();
         }
         return cacheService.getJson();
     }
