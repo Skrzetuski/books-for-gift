@@ -3,6 +3,7 @@ package pl.pasiekaksiazek.web.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@Log4j2
 @Getter
 @Service
 public class BooksService {
@@ -77,28 +79,38 @@ public class BooksService {
 
     public String prepareJsonAndListCache() throws URISyntaxException, JsonProcessingException {
 
+        log.info("Setting up counter wanted and owned books to zero");
         wantedBooksURL.reset();
         ownedBooksURL.reset();
+        log.info("Counters zeroed");
+
 
         List<Book> ownedBooks = new ArrayList<>();
+        log.info("Initialized empty ownedBooks list");
 
         do {
+            log.info("Getting next page from ownedBooks shelf and added to list");
             ownedBooks.addAll(getBooksFromShelf(ownedBooksURL.nextPage(), ConstantsContentPage.httpHeaders));
         } while (getLeft() > 0);
 
 
         List<Book> wantedBooks = new ArrayList<>();
+        log.info("Initialized empty wantedBooks list");
 
         do {
+            log.info("Getting next page from wantedBooks shelf and added to list");
             wantedBooks.addAll(getBooksFromShelf(wantedBooksURL.nextPage(), ConstantsContentPage.httpHeaders));
         } while (getLeft() > 0);
 
         ObjectMapper mapper = new ObjectMapper();
         List<Book> tmp = bookFilter.newListBooksForGift(wantedBooks, ownedBooks);
         String json = mapper.writeValueAsString(tmp);
+        log.info("Created BooksForGift temporary list and finally json");
 
         cacheService.setGiftBooksList(tmp);
+        log.info("Update cache list of temporary value");
 
+        log.info("return json");
         return json;
     }
 }

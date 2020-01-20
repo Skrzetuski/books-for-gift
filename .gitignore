@@ -32,3 +32,6 @@ src/front/.env.production.local
 src/front/npm-debug.log*
 src/front/yarn-debug.log*
 src/front/yarn-error.log*
+
+#logs
+/log
